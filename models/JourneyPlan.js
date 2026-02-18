@@ -1,22 +1,23 @@
 const mongoose = require('mongoose');
 
 const JourneyPlanSchema = new mongoose.Schema({
-    routeName: { type: String, required: true },
-    routeCode: { type: String, required: true },
-    validFrom: { type: Date, required: true },
+    routeName: { type: String, required: true, trim: true },
+    routeCode: { type: String, required: true, unique: true, index: true },
+    validFrom: { type: Date, required: true, index: true },
     validTo: { type: Date, required: true },
-    company: { type: String, required: true }, // FMCG Company Name
-    warehouse: { type: String }, // Optional or link
-    vehicle: { type: String }, // Optional or link
-    role: { type: String, required: true }, // 'Sales Rep', 'Store Manager', etc.
-    primaryEmployee: { type: String }, // Employee Name
-    status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
-    customerIds: [{ type: Number }], // Array of customer IDs
+    company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true },
+    warehouse: { type: String, trim: true },
+    vehicle: { type: String, trim: true },
+    role: { type: String, required: true },
+    primaryEmployee: { type: String, index: true },
+    status: { type: String, enum: ['Active', 'Inactive'], default: 'Active', index: true },
+    customerIds: [{ type: Number }],
     schedule: {
         frequency: { type: String, enum: ['Daily', 'Weekly', 'Monthly'] },
-        days: [{ type: String }] // Array of days like 'Monday', 'Tuesday'
+        days: [{ type: String }]
     },
-    createdAt: { type: Date, default: Date.now }
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model('JourneyPlan', JourneyPlanSchema);
