@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const JourneyPlanSchema = new mongoose.Schema({
     routeName: { type: String, required: true, trim: true },
-    routeCode: { type: String, required: true, unique: true, index: true },
+    routeCode: { type: String, required: true, index: true },
     validFrom: { type: Date, required: true, index: true },
     validTo: { type: Date, required: true },
     company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true },

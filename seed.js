@@ -66,19 +66,21 @@ const seedDB = async () => {
             console.log(`Created ${customers.length} customers for ${company.name}`);
         }
 
-        // Create a sample Journey Plan for John Doe
+        // Create sample Journey Plans for John Doe and vansales_test01
         const nestle = await Company.findOne({ name: 'Nestle' });
-        const nestleCustomers = await Customer.find({ company: nestle._id }).limit(5);
+        const nestleCustomers = await Customer.find({ company: nestle._id }).limit(8);
 
         const JourneyPlan = require('./models/JourneyPlan');
-        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
         const nextWeek = new Date();
-        nextWeek.setDate(today.getDate() + 7);
+        nextWeek.setDate(yesterday.getDate() + 8);
 
+        // Plan for John Doe
         await JourneyPlan.create({
             routeName: "Nestle Morning Route",
             routeCode: "R001",
-            validFrom: today,
+            validFrom: yesterday,
             validTo: nextWeek,
             company: nestle._id,
             warehouse: "Central WH",
@@ -86,14 +88,33 @@ const seedDB = async () => {
             role: "Sales Representative",
             primaryEmployee: "John Doe",
             status: "Active",
-            customerIds: nestleCustomers.map(c => c.id),
+            customerIds: nestleCustomers.slice(0, 4).map(c => c.id),
             schedule: {
                 frequency: "Daily",
                 days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
             }
         });
 
-        console.log('Created sample Journey Plan for John Doe');
+        // Plan for mobile test user: vansales_test01
+        await JourneyPlan.create({
+            routeName: "City Center Retail Route",
+            routeCode: "R002",
+            validFrom: yesterday,
+            validTo: nextWeek,
+            company: nestle._id,
+            warehouse: "West WH",
+            vehicle: "Van 002",
+            role: "Sales Representative",
+            primaryEmployee: "vansales_test01",
+            status: "Active",
+            customerIds: nestleCustomers.slice(4, 8).map(c => c.id),
+            schedule: {
+                frequency: "Daily",
+                days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            }
+        });
+
+        console.log('Created sample Journey Plans for John Doe and vansales_test01');
         console.log('Seeded database with companies, customers, and plans!');
         process.exit();
     } catch (err) {
