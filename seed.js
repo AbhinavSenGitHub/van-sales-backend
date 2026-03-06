@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Company = require('./models/Company');
 const Customer = require('./models/Customer');
+const JourneyPlan = require('./models/JourneyPlan');
 require('dotenv').config();
 
 const DATA_MAPPING = {
@@ -31,6 +32,7 @@ const seedDB = async () => {
         // Clear existing data
         await Company.deleteMany({});
         await Customer.deleteMany({});
+        await JourneyPlan.deleteMany({});
 
         let customerCounter = 1;
 
@@ -58,6 +60,8 @@ const seedDB = async () => {
                     visitFrequency: "Weekly",
                     lastOrder: (Math.random() * 5000).toFixed(2),
                     avgOrder: (Math.random() * 5000 + 1000).toFixed(2),
+                    lat: 12.9716 + (Math.random() - 0.5) * 0.1,
+                    lng: 77.5946 + (Math.random() - 0.5) * 0.1,
                     company: company._id
                 });
             });
@@ -70,7 +74,6 @@ const seedDB = async () => {
         const nestle = await Company.findOne({ name: 'Nestle' });
         const nestleCustomers = await Customer.find({ company: nestle._id }).limit(8);
 
-        const JourneyPlan = require('./models/JourneyPlan');
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const nextWeek = new Date();

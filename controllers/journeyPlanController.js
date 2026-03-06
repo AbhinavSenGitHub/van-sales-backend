@@ -127,7 +127,32 @@ exports.getJourneyPlans = async (req, res) => {
             .lean();
         res.json(plans);
     } catch (err) {
+        console.error('Error in getJourneyPlans:', err);
         res.status(500).json({ status: 'error', message: 'Failed to fetch plans' });
+    }
+};
+
+/**
+ * Get a single journey plan with customer details
+ */
+exports.getJourneyPlanById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const plan = await JourneyPlan.findById(id)
+            .populate('company', 'name')
+            .lean();
+
+        if (!plan) {
+            return res.status(404).json({ status: 'error', message: 'Plan not found' });
+        }
+
+        // Fetch customer details for the IDs in the plan
+        const customers = await Customer.find({ id: { $in: plan.customerIds } }).lean();
+
+        res.json({ ...plan, customers });
+    } catch (err) {
+        console.error('Error in getJourneyPlanById:', err);
+        res.status(500).json({ status: 'error', message: 'Failed to fetch plan details' });
     }
 };
 

@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 app.use(cors({
     origin: process.env.CORS_ORIGIN || '*', // Optimize: allow only specific origins in production
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 

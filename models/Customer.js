@@ -38,6 +38,8 @@ const customerSchema = new mongoose.Schema({
     visitFrequency: String,
     lastOrder: String,
     avgOrder: String,
+    lat: { type: Number },
+    lng: { type: Number },
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company',
